@@ -16,6 +16,17 @@ services:
       - WORDPRESS_DB_NAME: alcanzapoesia
       - WORDPRESS_DB_USER: alcanza
       - WORDPRESS_DB_PASSWORD: $LPAPT@=3399.
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`jmuleiro.ar`)"
+      - "traefik.http.routers.traefik.middlewares=redirect@file"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8000"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik-https.rule=Host(`jmuleiro.ar`)"
+      - "traefik.http.routers.traefik-https.entrypoints=websecure"
+      - "traefik.http.routers.traefik-https.tls.certresolver=resolver"
+      - "traefik.http.routers.traefik-https.tls=true"
+      - "traefik.http.services.traefik-https.loadbalancer.server.port=80"
 
   db:
     image: mysql:5.7
@@ -42,6 +53,17 @@ services:
       - MYSQL_ROOT_PASSWORD: Y5%u?u5V2kPf_uG?BTheRrN*
     networks:
       - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`phpmyadmin.jmuleiro.ar`)"
+      - "traefik.http.routers.traefik.middlewares=redirect@file"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik-https.rule=Host(`phpmyadmin.jmuleiro.ar`)"
+      - "traefik.http.routers.traefik-https.entrypoints=websecure"
+      - "traefik.http.routers.traefik-https.tls.certresolver=resolver"
+      - "traefik.http.routers.traefik-https.tls=true"
+      - "traefik.http.services.traefik-https.loadbalancer.server.port=8080"
 volumes:
   db-data: {}
 
