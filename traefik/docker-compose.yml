@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  traefik-proxy:
+    image: traefik:2.4
+    container_name: traefik
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/traefik.toml
+      - ./traefik-dynamic.toml:/traefik-dynamic.toml
+    networks:
+      - web
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    command: # all config is loaded from toml file
+      - --providers.file.filename=/traefik.toml
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.jmuleiro.ar`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=redirect@file"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik-https.rule=Host(`traefik.jmuleiro.ar`)"
+      - "traefik.http.routers.traefik-https.entrypoints=websecure"
+      - "traefik.http.routers.traefik-https.service=api@internal"
+      - "traefik.http.routers.traefik-https.middlewares=auth@file"
+      - "traefik.http.routers.traefik-https.tls.certresolver=resolver"
+      - "traefik.http.routers.traefik-https.tls=true"
+      - "traefik.http.services.traefik-https.loadbalancer.server.port=8080"
+
+networks:
+  web:
+    external: true

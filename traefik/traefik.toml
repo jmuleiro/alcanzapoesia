@@ -1,0 +1,47 @@
+defaultEntryPoints = ["websecure", "web"]
+logLevel = "debug"
+
+[api]
+dashboard = true
+
+[providers.file]
+filename = "/traefik-dynamic.toml"
+
+[providers.docker]
+endpoint = "unix:///var/run/docker.sock"
+exposedbydefault = false
+network = "web"
+watch = true
+
+[entryPoints]
+[entryPoints.web]
+
+address = ":80"
+[entryPoints.websecure]
+address = ":443"
+
+[entryPoints.api]
+address = ":8080"
+
+[traefikLog]
+filePath = "/var/log/traefik/traefik.log"
+
+[accessLog]
+filePath = "/var/log/traefik/access.log"
+
+[http.routers]
+[http.routers.main]
+rule = "Host(`jmuleiro.ar`)" # ------------------ host
+[http.routers.main.tls]
+certResolver = "resolver"
+[[http.routers.main.tls.domains]]
+main = "jmuleiro.ar" # ------------------ host
+sans = ["*.jmuleiro.ar"] # ------------------ host  
+
+[retry]
+
+[certificatesResolvers.resolver.acme]
+email = "joaquinmuleirobeltran@gmail.com"
+storage = "/letsencrypt/acme.json"
+[certificatesResolvers.resolver.acme.httpChallenge]
+entryPoint = "web"

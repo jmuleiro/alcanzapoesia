@@ -1,0 +1,38 @@
+[http]
+[http.routers.http-router]
+entryPoints = ["web"]
+rule = "PathPrefix(`/`)"
+service = "service-web"
+
+[http.routers.https-router]
+
+entryPoints = ["websecure"]
+rule = "PathPrefix(`/`)"
+service = "service-websecure"
+[http.routers.api-dashboard]
+entryPoints = ["api"]
+middlewares = ["auth"]
+rule = "(PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+service = "api@internal"
+
+[http.middlewares]
+[http.middlewares.auth.basicAuth]
+headerField = "X-WebAuth-User"
+removeHeader = true
+users = [
+  # USERS !!!!!!!!!!!!!!!!!!!!!!!!
+]
+
+[http.middlewares.redirect.redirectScheme]
+
+permanent = "true"
+port = "443"
+scheme = "https"
+[http.services]
+[http.services.service-web.loadBalancer]
+[[http.services.service-web.loadBalancer.servers]]
+url = "http://jmuleiro.ar" # ------------------ host
+
+[http.services.service-websecure.loadBalancer]
+[[http.services.service-websecure.loadBalancer.servers]]
+url = "https://jmuleiro.ar" # ------------------ host

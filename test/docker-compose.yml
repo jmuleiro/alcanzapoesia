@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  web:
+    image: wordpress:5.6.1-apache # wordpress 5.6.1, apache ?.?, php 7.4
+    container_name: "alcanzapoesia-app"
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - web
+    ports:
+      - "8000:80"
+    environment:
+      - WORDPRESS_DB_HOST: db:3306
+      - WORDPRESS_DB_NAME: alcanzapoesia
+      - WORDPRESS_DB_USER: alcanza
+      - WORDPRESS_DB_PASSWORD: $LPAPT@=3399.
+
+  db:
+    image: mysql:5.7
+    container_name: "alcanzapoesia-db"
+    restart: always
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD: Y5%u?u5V2kPf_uG?BTheRrN*
+      - MYSQL_DATABASE: alcanzapoesia
+      - MYSQL_USER: alcanza
+      - MYSQL_PASSWORD: $LPAPT@=3399.
+
+  phpmyadmin:
+    image: phpmyadmin:5.0
+    container_name: "alcanzapoesia-db-api"
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST: db
+      - MYSQL_ROOT_PASSWORD: Y5%u?u5V2kPf_uG?BTheRrN*
+    networks:
+      - web
+volumes:
+  db-data: {}
+
+networks:
+  web:
+    external: true
