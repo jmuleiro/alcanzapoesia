@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   web:
-    image: wordpress:5.6.2-apache # wordpress 5.6.2, apache ?.?, php 7.4
+    image: wordpress:5.7-apache # wordpress 5.7, apache ?.?, php 7.4
     container_name: "alcanzapoesia-app"
     restart: always
     depends_on:
@@ -13,20 +13,20 @@ services:
       - "8000:80"
     environment:
       - WORDPRESS_DB_HOST: db:3306
-      - WORDPRESS_DB_NAME: "alcanzapoesia"
-      - WORDPRESS_DB_USER: "alcanza"
-      - WORDPRESS_DB_PASSWORD: "$LPAPT@=3399."
+      - WORDPRESS_DB_NAME: ${MYSQL_DB_NAME}
+      - WORDPRESS_DB_USER: ${MYSQL_WP_USER}
+      - WORDPRESS_DB_PASSWORD: ${MYSQL_WP_PASSWORD}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.alcanza.rule=Host(`localhost`)"
-      #  - "traefik.http.routers.alcanza.middlewares=redirect@file"
+      - "traefik.http.routers.alcanza.rule=Host(`jmuleiro.ar`)"
+      - "traefik.http.routers.alcanza.middlewares=redirect@file"
       - "traefik.http.services.alcanza.loadbalancer.server.port=80"
       - "traefik.http.routers.alcanza.entrypoints=web"
-    #  - "traefik.http.routers.alcanza-https.rule=Host(`jmuleiro.ar`)"
-    #  - "traefik.http.routers.alcanza-https.entrypoints=websecure"
-    #  - "traefik.http.routers.alcanza-https.tls.certresolver=resolver"
-    #  - "traefik.http.routers.alcanza-https.tls=true"
-    #  - "traefik.http.services.alcanza-https.loadbalancer.server.port=80"
+      - "traefik.http.routers.alcanza-https.rule=Host(`jmuleiro.ar`)"
+      - "traefik.http.routers.alcanza-https.entrypoints=websecure"
+      - "traefik.http.routers.alcanza-https.tls.certresolver=resolver"
+      - "traefik.http.routers.alcanza-https.tls=true"
+      - "traefik.http.services.alcanza-https.loadbalancer.server.port=80"
     volumes:
       - wordpress:/var/www/html
 
@@ -36,23 +36,26 @@ services:
     restart: always
     volumes:
       - db-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+      - 33060:33060
     environment:
-      - MYSQL_ROOT_PASSWORD: "Y5%u?u5V2kPf_uG?BTheRrN*"
-      - MYSQL_DATABASE: "alcanzapoesia"
-      - MYSQL_USER: "alcanza"
-      - MYSQL_PASSWORD: "$LPAPT@=3399."
+      - MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE: ${MYSQL_DB_NAME}
+      - MYSQL_USER: ${MYSQL_WP_USER}
+      - MYSQL_PASSWORD: ${MYSQL_WP_PASSWORD}
 
   phpmyadmin:
     image: phpmyadmin:5.0
     container_name: "alcanzapoesia-db-api"
     restart: always
     depends_on:
-      - db
+      - db:3306
     ports:
       - "8080:80"
     environment:
-      - PMA_HOST: db
-      - MYSQL_ROOT_PASSWORD: Y5%u?u5V2kPf_uG?BTheRrN*
+      - PMA_HOST: db:3306
+      - MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     networks:
       - web
     labels:
