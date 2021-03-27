@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   web:
-    image: wordpress:5.6.1-apache # wordpress 5.6.1, apache ?.?, php 7.4
+    image: wordpress:5.6.2-apache # wordpress 5.6.2, apache ?.?, php 7.4
     container_name: "alcanzapoesia-app"
     restart: always
     depends_on:
@@ -13,20 +13,22 @@ services:
       - "8000:80"
     environment:
       - WORDPRESS_DB_HOST: db:3306
-      - WORDPRESS_DB_NAME: alcanzapoesia
-      - WORDPRESS_DB_USER: alcanza
-      - WORDPRESS_DB_PASSWORD: $LPAPT@=3399.
+      - WORDPRESS_DB_NAME: "alcanzapoesia"
+      - WORDPRESS_DB_USER: "alcanza"
+      - WORDPRESS_DB_PASSWORD: "$LPAPT@=3399."
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`jmuleiro.ar`)"
-      - "traefik.http.routers.traefik.middlewares=redirect@file"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8000"
-      - "traefik.http.routers.traefik.entrypoints=web"
-      - "traefik.http.routers.traefik-https.rule=Host(`jmuleiro.ar`)"
-      - "traefik.http.routers.traefik-https.entrypoints=websecure"
-      - "traefik.http.routers.traefik-https.tls.certresolver=resolver"
-      - "traefik.http.routers.traefik-https.tls=true"
-      - "traefik.http.services.traefik-https.loadbalancer.server.port=80"
+      - "traefik.http.routers.alcanza.rule=Host(`localhost`)"
+      #  - "traefik.http.routers.alcanza.middlewares=redirect@file"
+      - "traefik.http.services.alcanza.loadbalancer.server.port=80"
+      - "traefik.http.routers.alcanza.entrypoints=web"
+    #  - "traefik.http.routers.alcanza-https.rule=Host(`jmuleiro.ar`)"
+    #  - "traefik.http.routers.alcanza-https.entrypoints=websecure"
+    #  - "traefik.http.routers.alcanza-https.tls.certresolver=resolver"
+    #  - "traefik.http.routers.alcanza-https.tls=true"
+    #  - "traefik.http.services.alcanza-https.loadbalancer.server.port=80"
+    volumes:
+      - wordpress:/var/www/html
 
   db:
     image: mysql:5.7
@@ -35,10 +37,10 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD: Y5%u?u5V2kPf_uG?BTheRrN*
-      - MYSQL_DATABASE: alcanzapoesia
-      - MYSQL_USER: alcanza
-      - MYSQL_PASSWORD: $LPAPT@=3399.
+      - MYSQL_ROOT_PASSWORD: "Y5%u?u5V2kPf_uG?BTheRrN*"
+      - MYSQL_DATABASE: "alcanzapoesia"
+      - MYSQL_USER: "alcanza"
+      - MYSQL_PASSWORD: "$LPAPT@=3399."
 
   phpmyadmin:
     image: phpmyadmin:5.0
@@ -66,6 +68,7 @@ services:
       - "traefik.http.services.traefik-https.loadbalancer.server.port=8080"
 volumes:
   db-data: {}
+  wordpress:
 
 networks:
   web:
