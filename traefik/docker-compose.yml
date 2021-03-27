@@ -9,6 +9,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.toml:/traefik.toml
       - ./traefik-dynamic.toml:/traefik-dynamic.toml
+      - ./letsencrypt:/letsencrypt
     networks:
       - web
     ports:
@@ -16,10 +17,10 @@ services:
       - "443:443"
       - "8080:8080"
     command: # all config is loaded from toml file
-      - --providers.file.filename=/traefik.toml
+      - --providers.file.filename=./traefik.toml
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.jmuleiro.ar`)"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=redirect@file"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
