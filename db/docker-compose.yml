@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  alcanza-db:
+    image: mysql:8.0
+    container_name: alcanza-db
+    restart: always
+    volumes:
+      - db:/var/lib/mysql
+    ports:
+      - 3306:3306
+      - 33060:33060
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME}
+      MYSQL_USER: ${MYSQL_WP_USER}
+      MYSQL_PASSWORD: ${MYSQL_WP_PASSWORD}
+  
+volumes:
+  db-data: {}
