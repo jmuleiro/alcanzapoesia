@@ -1,0 +1,6 @@
+static/
+db/
+.git
+.gitignore
+README.md
+.vscode
