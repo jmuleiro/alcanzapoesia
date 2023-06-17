@@ -3,5 +3,5 @@ test/.env
 letsencrypt
 .env
 db/.env
-wp-content/uploads
+wp-content
 *.log
