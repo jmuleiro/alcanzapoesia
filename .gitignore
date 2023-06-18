@@ -5,3 +5,4 @@ letsencrypt
 db/.env
 wp-content
 *.log
+secret*.y*ml
