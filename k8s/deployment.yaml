@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alcanza-wp
+  namespace: alcanzapoesia
+  labels:
+    project: alcanzapoesia
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: alcanza-poesia
+  template:
+    metadata:
+      labels:
+        app: alcanza-poesia
+        project: alcanzapoesia
+    spec:
+      containers:
+        - name: main
+          image: TODO//FIXME
+          resources:
+            requests:
+              cpu: 50m
+              memory: 100Mi
+            limits:
+              memory: "500Mi"
+          ports:
+            - containerPort: 80
+              name: http
+          volumeMounts:
+            - name: wordpress
+              mountPath: /var/www/html/wp-content/uploads
+  volumeClaimTemplates:
+    - metadata:
+        name: wordpress
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 2G

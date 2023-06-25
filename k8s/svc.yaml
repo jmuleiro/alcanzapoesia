@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: alcanza-wp
+  namespace: alcanzapoesia
+  labels:
+    project: alcanzapoesia
+spec:
+  selector:
+    app: alcanza-poesia
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: http
