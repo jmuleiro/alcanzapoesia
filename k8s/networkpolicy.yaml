@@ -40,6 +40,7 @@ spec:
             matchLabels:
               type: "ingress-controller"
       ports:
-      #TODO: replace with traefik ports
         - protocol: TCP
-          port: 8080
+          port: 8000
+        - protocol: TCP
+          port: 8443
