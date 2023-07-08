@@ -36,11 +36,7 @@ spec:
           volumeMounts:
             - name: wordpress
               mountPath: /var/www/html/wp-content/uploads
-  volumeClaimTemplates:
-    - metadata:
-        name: wordpress
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 2G
+      volumes:
+        - name: wordpress
+          persistentVolumeClaim:
+            claimName: alcanza-wp
