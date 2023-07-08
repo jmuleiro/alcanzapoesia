@@ -6,4 +6,47 @@ metadata:
   labels:
     project: alcanzapoesia
 spec:
-  
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`lapoesiaalcanza.com.ar`) || Host(`www.lapoesiaalcanza.com.ar`)
+      middlewares:
+        - name: tls-redirect
+          namespace: alcanzapoesia
+      services:
+        - kind: Service
+          name: alcanza-wp
+          namespace: alcanzapoesia
+          port: 8080
+          scheme: http
+          nativeLB: true
+
+---
+
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: alcanza-https
+  namespace: alcanzapoesia
+  labels:
+    project: alcanzapoesia
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`lapoesiaalcanza.com.ar`) || Host(`www.lapoesiaalcanza.com.ar`)
+      services:
+        - kind: Service
+          name: alcanza-wp
+          namespace: alcanzapoesia
+          port: 8080
+          scheme: https
+          nativeLB: true
+  tls:
+    certResolver: letsencrypt
+    domains:
+      - main: lapoesiaalcanza.com.ar
+        sans:
+          - www.lapoesiaalcanza.com.ar
