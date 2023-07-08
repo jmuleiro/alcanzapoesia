@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: alcanza-wp
+  namespace: alcanzapoesia
+  labels:
+    project: alcanzapoesia
+spec:
+  podSelector:
+    matchLabels:
+      app: alcanza-poesia
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              database: ""
+              type: "mysql"
+        - namespaceSelector:
+            matchLabels:
+              type: "ingress-controller"
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              database: ""
+              type: "mysql"
+      ports:
+        - protocol: TCP
+          port: 3306
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              type: "ingress-controller"
+      ports:
+      #TODO: replace with traefik ports
+        - protocol: TCP
+          port: 8080
