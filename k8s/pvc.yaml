@@ -12,5 +12,4 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  storageClassName: ""
   volumeName: alcanza-wp
